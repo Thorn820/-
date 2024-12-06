@@ -118,14 +118,33 @@ class DrawingApp:
         self.canvas.delete("all")  # 删除画布上的所有内容
         self.old_x, self.old_y = None, None  # 重置鼠标位置
 
+    # def set_canvas_size(self):
+    #     # 弹出对话框设置画布大小
+    #     width = simpledialog.askinteger("画布宽度", "请输入画布宽度:", minvalue=100, maxvalue=2000, initialvalue=self.canvas_width)
+    #     height = simpledialog.askinteger("画布高度", "请输入画布高度:", minvalue=100, maxvalue=2000, initialvalue=self.canvas_height)
+    #     if width and height:
+    #         self.canvas.config(width=width, height=height)  # 更新画布的大小
+    #         self.canvas_width = width  # 更新画布宽度
+    #         self.canvas_height = height  # 更新画布高度
     def set_canvas_size(self):
-        # 弹出对话框设置画布大小
-        width = simpledialog.askinteger("画布宽度", "请输入画布宽度:", minvalue=100, maxvalue=2000, initialvalue=self.canvas_width)
-        height = simpledialog.askinteger("画布高度", "请输入画布高度:", minvalue=100, maxvalue=2000, initialvalue=self.canvas_height)
-        if width and height:
-            self.canvas.config(width=width, height=height)  # 更新画布的大小
-            self.canvas_width = width  # 更新画布宽度
-            self.canvas_height = height  # 更新画布高度
+        # 弹出对话框输入画布尺寸：格式为 "宽度x高度"
+        size_str = simpledialog.askstring(
+            "设置画布大小",
+            "请输入画布大小（格式：宽度 x 高度）：",
+            initialvalue=f"{self.canvas_width} x {self.canvas_height}"
+        )
+        if size_str:
+            try:
+                # 解析用户输入的尺寸
+                width, height = map(int, size_str.split('x'))
+                if 100 <= width <= 2000 and 100 <= height <= 2000:
+                    self.canvas.config(width=width, height=height)  # 更新画布的大小
+                    self.canvas_width = width  # 更新画布宽度
+                    self.canvas_height = height  # 更新画布高度
+                else:
+                    raise ValueError("宽度和高度必须在100到2000之间")
+            except ValueError:
+                print("无效的输入，请按照 '宽度 x 高度' 格式输入，例如：800 x 600")
 
     def add_image(self):
         # 弹出文件选择框，用户选择一个图片文件
